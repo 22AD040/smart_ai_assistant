@@ -9,7 +9,7 @@ DB_PATH = "database/users.db"
 
 os.makedirs("database", exist_ok=True)
 
-def create_user(username, password):
+def init_db():
     conn = sqlite3.connect(DB_PATH)
     cur = conn.cursor()
 
@@ -20,10 +20,23 @@ def create_user(username, password):
         )
     """)
 
+    conn.commit()
+    conn.close()
+
+
+def create_user(username, password):
+    init_db()   
+
+    conn = sqlite3.connect(DB_PATH)
+    cur = conn.cursor()
+
     hashed_password = pwd_context.hash(password)
 
     try:
-        cur.execute("INSERT INTO users VALUES (?, ?)", (username, hashed_password))
+        cur.execute(
+            "INSERT INTO users VALUES (?, ?)",
+            (username, hashed_password)
+        )
         conn.commit()
         return True
     except:
@@ -31,10 +44,16 @@ def create_user(username, password):
 
 
 def login(username, password):
+    init_db()   
+
     conn = sqlite3.connect(DB_PATH)
     cur = conn.cursor()
 
-    cur.execute("SELECT password FROM users WHERE username = ?", (username,))
+    cur.execute(
+        "SELECT password FROM users WHERE username = ?",
+        (username,)
+    )
+
     result = cur.fetchone()
 
     if result and pwd_context.verify(password, result[0]):
