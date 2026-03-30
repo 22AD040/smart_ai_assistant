@@ -123,7 +123,7 @@ This project integrates **LangSmith** for:
 
 ## 📁 Project Structure
 
-
+```bash
 smart-ai-assistant/
 │
 ├── app/
@@ -266,3 +266,5 @@ If you like this project:
 This project is licensed under the MIT License
 
 ---
+
+```
